@@ -40,11 +40,10 @@ def save_gazouille():
     if request.method == 'POST':
         print (request.form)
         if len(request.form["user-text"]) < 281:
-            dump_to_csv(request.form)
-            return redirect(url_for('timeline'))
-        #return "OK"
-    if request.method == 'GET':
-        return render_template('formulaire.html')
+            if request.form["user-text"] not in "barre":
+                dump_to_csv(request.form)
+                return redirect(url_for('timeline'))
+    return render_template('formulaire.html')
 
 @app.route('/timeline', methods= ['GET'])
 def timeline():
@@ -67,11 +66,10 @@ def parse_from_db():
         reader = csv.reader(f)
         for row in reader:
             gaz.append({"user":row[0], "text":row[1]})
-            return gaz
+    return gaz
 #    mycursor.execute("SELECT * FROM csvremplace")
 #    myresult = mycursor.fetchone()
 #    print(myresult)
-#    test
 
 def dump_to_csv(d):
     donnees = [d["user-name"],d["user-text"] ]
